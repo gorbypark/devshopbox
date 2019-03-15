@@ -17,7 +17,7 @@ Devshopbox is a fairly simple docker-compose based project to get you up and run
 ## How To
 
 - Add a wildcard A record that points to your linux host/VPS (ie: \*.mydomain.com -> ip.of.linux.host)
-- Open the file at `./traefik/traefik.conf` and configure for your domain
+- Open the file at `./traefik/traefik.toml` and configure for your domain
 - Add a file named .env into the root of the project folder with your configuration variables as seen below.
 
 ```
