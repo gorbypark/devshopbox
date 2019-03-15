@@ -2,7 +2,7 @@ version: "3"
 
 services:
   traefik:
-    image: traefik:latest
+    image: traefik:${TRAEFIK_VERSION}
     restart: always
     ports:
       - 80:80
@@ -17,7 +17,7 @@ services:
     container_name: traefik
 
   gitea:
-    image: gitea/gitea:latest
+    image: gitea/gitea:${TRAEFIK_VERSION}
     environment:
       - USER_UID=1000
       - USER_GID=1000
@@ -40,7 +40,7 @@ services:
     container_name: gitea
 
   drone:
-    image: drone/drone:latest
+    image: drone/drone:${TRAEFIK_VERSION}
     networks:
       - cicd
       - web
@@ -72,7 +72,7 @@ services:
     container_name: drone
 
   vscode:
-    image: codercom/code-server:latest
+    image: codercom/code-server:${TRAEFIK_VERSION}
     command: --allow-http --password=${VSCODE_PASSWORD}
     networks:
       - cicd

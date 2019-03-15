@@ -22,10 +22,14 @@ Devshopbox is a fairly simple docker-compose based project to get you up and run
 
 ```
 ROOT_DOMAIN=mydomain.com
+TRAEFIK_VERSION=latest
 GITEA_SUB_DOMAIN=git
+GITEA_VERSION=latest
 DRONE_SUB_DOMAIN=ci
+DRONE_VERSION=latest
 VSCODE_SUB_DOMAIN=vscode
 VSCODE_PASSWORD=sup3rs3cr3t
+VSCODE_VERSION=latest
 ```
 
 - Run `docker-compose up -d` in the root folder of the project
