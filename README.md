@@ -34,4 +34,4 @@ VSCODE_PASSWORD=sup3rs3cr3t
 
 ## Warning
 
-This is a work in progress. Although I have kept security in mind, there's no guarantee of any. Also, data is kept in docker volumes in the root dir of the project, so keep those backed up if you care about your data. As above, there's no guarantee about your data.
+This is a work in progress. Although I have kept security in mind, there's no guarantee of any. Also, data is kept in docker volumes in the root dir of the project, so keep those backed up if you care about your data. As above, there's no guarantee about your data. Both traefik and drone are configured to have direct access to the hosts `/var/run/docker.sock`. While they are both configured as per the instructions for each project, it is debatable as to whether this could pose a security concern. If either traefik or drone's containers were breeched, they'd have full control over the hosts docker daemon, which pretty much means they would have full control over the host itself.
