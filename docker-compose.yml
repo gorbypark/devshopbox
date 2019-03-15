@@ -43,6 +43,7 @@ services:
     image: drone/drone:${DRONE_VERSION}
     networks:
       - devshopbox-internal
+      - web
     ports:
       - 9000
     volumes:
