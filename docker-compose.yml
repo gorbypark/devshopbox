@@ -76,8 +76,6 @@ services:
     command: --allow-http --password=${VSCODE_PASSWORD}
     networks:
       - cicd
-    ports:
-      - 8443
     volumes:
       - ./vscode:/root/project
     restart: always
