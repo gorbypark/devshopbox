@@ -74,8 +74,6 @@ services:
   vscode:
     image: codercom/code-server:${VSCODE_VERSION}
     command: --allow-http --password=${VSCODE_PASSWORD}
-    networks:
-      - cicd
     volumes:
       - ./vscode:/root/project
     restart: always
