@@ -35,7 +35,11 @@ VSCODE_VERSION=latest
 
 - Run `docker-compose up -d` in the root folder of the project
 - You should now have three subdomains, all protected with SSL certificates pointing to the three apps (gitea, drone, code-server).
-- Visit the gitea subdomain to configure it. Please use the SQLite database as this project doesn't provision a PostgreSQL or MySQL database for you. In the Gitea setup wizard, change the base url to `https://<subdomainfromenvfile>.mydomain.com`
+- Visit the gitea subdomain to configure it. Please use the SQLite database as this project doesn't provision a PostgreSQL or MySQL database for you. In the Gitea setup wizard, change the base url to `https://<subdomainfromenvfile>.mydomain.com`.
+
+## Updating Underlying Container Images
+
+If you have the version tag as `:latest` all that is required is running `docker-compose pull && docker-compose up -d` to pull the latest container images and restart. Alternatively, if you have named version tags, just update the .env file to whatever version you'd like and run `docker-compose up -d`.
 
 ## Security Warning
 
