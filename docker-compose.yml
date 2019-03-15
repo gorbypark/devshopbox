@@ -8,8 +8,8 @@ services:
       - 80:80
       - 443:443
     networks:
-      - web
-      - devshopbox-internal
+      - internal
+      - external
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.toml:/traefik.toml
@@ -23,7 +23,7 @@ services:
       - USER_GID=1000
     restart: always
     networks:
-      - devshopbox-internal
+      - external
     depends_on:
       - traefik
     volumes:
@@ -42,8 +42,8 @@ services:
   drone:
     image: drone/drone:${DRONE_VERSION}
     networks:
-      - devshopbox-internal
-      - web
+      - internal
+      - external
     ports:
       - 9000
     volumes:
@@ -75,7 +75,7 @@ services:
     image: codercom/code-server:${VSCODE_VERSION}
     command: --allow-http --password=${VSCODE_PASSWORD}
     networks:
-      - devshopbox-internal
+      - external
     volumes:
       - ./vscode:/root/project
     restart: always
@@ -93,7 +93,7 @@ services:
     container_name: vscode
 
 networks:
-  web:
+  external:
     external: true
-  devshopbox-internal:
+  internal:
     external: false
