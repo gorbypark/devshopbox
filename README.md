@@ -4,7 +4,7 @@
 
 Devshopbox is a fairly simple docker-compose based project to get you up and running with a self-hosted and web-based development environment. It includes:
 
-- Traefik (reverse proxy that auto provisions Let's Encrypt SSL certificates and sub-domains
+- Traefik (reverse proxy that auto provisions Let's Encrypt SSL certificates and sub-domains)
 - Gitea (web based git interface)
 - Drone (CI/CD)
 - Code Server (VisualStudio Code in the browser)
@@ -12,13 +12,22 @@ Devshopbox is a fairly simple docker-compose based project to get you up and run
 ## Requirements
 
 - A linux host with docker-compose and at least 2GB of RAM (1GB or less is fine if not using code-server)
-- A domain name
+- A domain name and control over it's DNS records
 
 ## How to
 
 - Add a wildcard A record that points to your linux host/VPS (ie: \*.mydomain.com -> ip.of.linux.host)
 - Open the file at `./traefik/traefik.conf` and configure for your domain
-- Add a file named .env into the root of the project folder with your configuration variables.
+- Add a file named .env into the root of the project folder with your configuration variables as seen below.
+
+```
+ROOT_DOMAIN=mydomain.com
+GITEA_SUB_DOMAIN=git
+DRONE_SUB_DOMAIN=ci
+VSCODE_SUB_DOMAIN=vscode
+VSCODE_PASSWORD=sup3rs3cr3t
+```
+
 - Run `docker-compose up -d` in the root folder of the project
 - You should now have three subdomains, all protected with SSL certificates pointing to the three apps (gitea, drone, code-server).
 - Visit the gitea subdomain to configure it. Please use the SQLite database as this project doesn't provision a PostgreSQL or MySQL database for you. In the Gitea setup wizard, change the base url to `https://<subdomainfromenvfile>.mydomain.com`
