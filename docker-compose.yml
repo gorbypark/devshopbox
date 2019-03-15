@@ -1,0 +1,101 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik:latest
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - web
+      - cicd
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.toml:/traefik.toml
+      - ./traefik/acme.json:/acme.json
+    container_name: traefik
+
+  gitea:
+    image: gitea/gitea:latest
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    networks:
+      - cicd
+    depends_on:
+      - traefik
+    volumes:
+      - ./gitea:/data
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:${GITEA_SUB_DOMAIN}.${ROOT_DOMAIN}"
+      - "traefik.basic.port=3000"
+      - "traefik.basic.protocol=http"
+      - "traefik.admin.frontend.rule=Host:admin-${GITEA_SUB_DOMAIN}.${ROOT_DOMAIN}"
+      - "traefik.admin.protocol=https"
+      - "traefik.admin.port=9443"
+    container_name: gitea
+
+  drone:
+    image: drone/drone:latest
+    networks:
+      - cicd
+      - web
+    ports:
+      - 9000
+    volumes:
+      - ./drone:/var/lib/drone
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    depends_on:
+      - gitea
+    environment:
+      - DRONE_GITEA_SERVER=https://${GITEA_SUB_DOMAIN}.${ROOT_DOMAIN}
+      - DRONE_GIT_ALWAYS_AUTH=false
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_ADMIN=mike
+      - DRONE_SERVER_HOST=${DRONE_SUB_DOMAIN}.${ROOT_DOMAIN}
+      - DRONE_SERVER_PROTO=https
+      - DRONE_TLS_AUTOCERT=false
+    labels:
+      - "traefik.docker.network=cicd"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:${DRONE_SUB_DOMAIN}.${ROOT_DOMAIN}"
+      - "traefik.basic.port=80"
+      - "traefik.basic.protocol=http"
+      - "traefik.admin.frontend.rule=Host:admin-${DRONE_SUB_DOMAIN}.${ROOT_DOMAIN}"
+      - "traefik.admin.protocol=https"
+      - "traefik.admin.port=9443"
+    container_name: drone
+
+  vscode:
+    image: codercom/code-server:latest
+    command: --allow-http --password=${VSCODE_PASSWORD}
+    networks:
+      - cicd
+    ports:
+      - 8443:8443
+    volumes:
+      - ./vscode:/root/project
+    restart: always
+    depends_on:
+      - traefik
+    labels:
+      - "traefik.docker.network=cicd"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:${VSCODE_SUB_DOMAIN}.${ROOT_DOMAIN}"
+      - "traefik.basic.port=8443"
+      - "traefik.basic.protocol=http"
+      - "traefik.admin.frontend.rule=Host:admin-${VSCODE_SUB_DOMAIN}.${ROOT_DOMAIN}"
+      - "traefik.admin.protocol=https"
+      - "traefik.admin.port=9443"
+    container_name: vscode
+
+networks:
+  web:
+    external: true
+  cicd:
+    external: false
