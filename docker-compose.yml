@@ -77,7 +77,7 @@ services:
     networks:
       - cicd
     ports:
-      - 8443:8443
+      - 8443
     volumes:
       - ./vscode:/root/project
     restart: always
